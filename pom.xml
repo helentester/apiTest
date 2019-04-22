@@ -1,0 +1,196 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.wufu</groupId>
+	<artifactId>apiTest</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>apiTest</name>
+	<description> apiTest</description>
+
+	<properties>
+		<!-- 指定编码，解决问题：错误: 编码 GBK 的不可映射字符 (0xBF) -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<!--加入对excel的读写支持 -->
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.17</version>
+		</dependency>
+		<!-- 加入testng测试框架 -->
+		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.14.3</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- 加入reportNG依赖，代替testNG测试报告。这个reportng已经过本人的修改，报告中会输出@Test的description属性 -->
+		<dependency>
+			<groupId>org.uncommons</groupId>
+			<artifactId>reportng</artifactId>
+			<version>1.1.6</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/reportng-1.1.6.jar</systemPath>
+			<exclusions>
+				<exclusion>
+					<groupId>org.testng</groupId>
+					<artifactId>testng</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- 因为依赖的是本地自己打包的reportng所以还要把它的依赖包velocity引入 -->
+		<dependency>
+			<groupId>velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<!-- 依赖guice -->
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+		<!-- 引入以处理MD5加密等问题 -->
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.11</version>
+		</dependency>
+		<!--引入以支持HTTP接口测试 -->
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.6</version>
+		</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime -->
+	<dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpmime</artifactId>
+		<version>4.5.7</version>
+	</dependency>
+		
+		<!-- 加入mysql支持 -->
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>6.0.6</version>
+		</dependency>
+		<!-- 加入json数据支持 -->
+		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.52</version>
+		</dependency>
+		<!-- 添加redis的驱动包，增加对redis的支持 -->
+		<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+
+		<!-- 签名验证工程引用（私库） -->
+		<dependency>
+			<groupId>com.wufumall</groupId>
+			<artifactId>wufumall-support-safety</artifactId>
+			<version>1.8.5-SNAPSHOT</version>
+		</dependency>
+		<!-- 签名验证工程需要依赖下面的工程 -->
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+
+		<plugins>
+			<!-- 配置把项目打包成jar包，包含第三方jar -->
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+			</plugin>
+			<!-- 指定JDK路径，${JAVA8_HOME}这个变量是在settings.xml中配置 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<executable>${JAVA10_HOME}/bin/javac</executable>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<suiteXmlFiles>
+						<!-- 主要业务流测试 -->
+						<suiteXmlFile>src/test/resources/myTestng.xml</suiteXmlFile>
+					</suiteXmlFiles>
+					<argLine>-Dfile.encoding=UTF-8</argLine>
+					<workingDirectory>target/</workingDirectory>
+					<forkMode>always</forkMode>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<properties>
+						<property>
+							<name>usedefaultlisteners</name>
+							<value>false</value>
+						</property>
+						<property>
+							<name>listener</name>
+							<value>org.uncommons.reportng.HTMLReporter</value>
+						</property>
+					</properties>
+					<workingDirectory>target/test-classes</workingDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<!-- 加入本地私库 -->
+	<distributionManagement>
+		<repository>
+			<id>Releases</id>
+			<name>Releases</name>
+			<url>http://192.168.1.235:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>Snapshots</id>
+			<name>Snapshots</name>
+			<url>http://192.168.1.235:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="接口测试">
+	<test name="登录注册业务">
+		<classes>
+			<class name="testcase.LoginTest"></class>
+			<class name="testcase.RegistryTest"></class>
+			<class name="testcase.FindPasswordTest"></class>
+		</classes>
+	</test>
+	<test name="会员签到业务">
+		<classes>
+			<class name="testcase.SignInTest"></class>
+		</classes>
+	</test>
+	<test name="收藏商品业务">
+		<classes>
+			<class name="testcase.MemberCollerctionTest"></class>
+		</classes>
+	</test>
+	<test name="实名认证和信用卡申请业务">
+		<classes>
+			<class name="testcase.AuthRealNameTest"></class>
+			<class name="testcase.ApplyCreditCardTest"></class>	
+		</classes>
+	</test>
+	<test name="优惠券业务">
+		<classes>
+			<class name="testcase.CouponTest"></class>
+		</classes>
+	</test>
+	<test name="福豆与优惠券分摊业务">
+		<classes>
+			<class name="testcase.CouponAndBeanInOrderTest"></class>
+		</classes>
+	</test>
+	<test name="康养卡分润业务">
+		<classes>
+			<class name="testcase.HealthCardOrderTest"></class>
+		</classes>
+	</test>
+	<test name="康养公寓分润业务">
+		<classes>
+			<class name="testcase.HotelProfitTest"></class>
+		</classes>
+	</test>
+	<test name="订单业务">
+		<classes>
+			<class name="testcase.OrderTest"></class>	
+		</classes>
+	</test>
+	<test name="商家中心业务测试">
+		<classes>
+			<class name="testcase.SupplierTest"></class>
+		</classes>
+	</test>
+
+
+
+<!-- 	<test name="站点管理">
+		<classes>
+			<class name="site.FloatingWindow"></class>
+		</classes>
+	</test> -->
+<!--   	<test name="业务调试">
+		<classes>
+ 		 <class name="testcase.HotelProfitTest">
+			</class>
+		</classes>
+	</test> -->
+
+</suite>
